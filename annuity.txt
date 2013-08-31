@@ -1,0 +1,68 @@
+Scratch paper for working out equations on annuities.
+
+http://en.wikipedia.org/wiki/Annuity_(finance_theory)
+
+Making n regular deposits D to an account earning interest r per n-period
+
+Assume account value before deposits is V(0) and R = 1 + r
+In general, V(i) = account value immediately after making deposit i, after
+                   accruing interest on the previous value
+
+For i > 0,
+V(i) = D + R*V(i-1)
+V(i) = D + R*(D + R * V(i-2))
+     = D + R*(D + R*(D + R*V(i-3)))
+     = D + R*D + R^2*D + R^3*V(i-3)
+     = D + R*D + R^2*D + ... + R^i*V(0)
+
+V(i) = R^0*D + R^1*D + R^2*D + ... + R^(i-1)*D + R^i*V(0)
+Just assume V(0) = 0 so this next part is similar
+V(i) = R^0*D + R^1*D + R^2*D + ... + R^(i-1)*D
+     = D * (R^0 + R^1 + R^2 + ... + R^(i-1))
+     = D * ((1 - R) * (R^0 + R^1 + R^2 + ... + R^(i-1))) / (1 - R)
+     = D * ((R^0 + R^1 + R^2 + ... + R^(i-1)) - (R^1 + R^2 + ... + R^i)) /
+       (1 - R)
+     = D * (R^0 - R^i) / (1 - R)
+V(i) = D * (1 - R^i) / (1 - R)
+
+D can be negative though, and V(0) isn't necessarily 0. In general, an account
+starting at V(0) growing at interest rate r per period, with payment D:
+
+V(i) = R^0*D + R^1*D + R^2*D + ... + R^(i-1)*D + R^i*V(0)
+     = D * (R^0 + R^1 + R^2 + ... + R^(i-1)) + R^i*V(0)
+     = D * (1 - R^i) / (1 - R) + R^i*V(0)
+     = D * (1 - R^i) / (1 - R) + R^i*P where P is the principal
+
+For D > 0, this tells account value, and for V(0) > 0 and D < 0, this tells
+amount owed on a loan.
+
+The total amount paid for the loan would be -D*n + V(n) such that n is the
+lowest argument for V(n) < D. That is, after n payments, the loan is paid off
+except for V(n), which is possibly 0.
+
+Solve for n such that V(n) < D given that V(0) = P = the principal
+V(n) = D * (1 - R^n) / (1 - R) + R^n*P < D
+(1 - R^n) / (1 - R) + R^n*P/D < 1
+1 - R^n + R^n*(P/D)*(1-R) < 1 - R
+1 - R^n*(1 + (P/D)*(1-R)) < 1 - R
+R^n*(1 + (P/D)*(1-R)) > R
+n + log_R(1 + (P/D)*(1-R)) > 1
+n > 1 - log_R(1 + (P/D)*(1-R))
+Hmm, doesn't look really useful. Shoot, I forgot that D is negative.
+
+Better, find D such that V(n) = 0 for a given P, R, n. The periodic payment
+required to meet those terms is -D.
+V(n) = D * (1 - R^n) / (1 - R) + R^n*P = 0
+D * (1 - R^n) / (1 - R) = -R^n*P
+D = -R^n*P * (1 - R) / (1 - R^n)
+Just say the periodic payment is
+-D = R^n*P * (1 - R) / (1 - R^n)
+
+Forget the above, just model a debt as negative balance instead of positive
+balance for somebody else with negative payment.
+
+Find D such that V(n) = X for a given P, R, n. The periodic payment required to
+meet those terms is D.
+V(n) = D * (1 - R^n) / (1 - R) + R^n*P = X
+D * (1 - R^n) / (1 - R) = X - R^n*P
+D = (X - R^n*P) * (1 - R) / (1 - R^n)
